@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EIL Login</title>
+  <link rel="icon" href="fevicon.jpeg" />
+
+  <!-- ✅ Load Google reCAPTCHA API -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-image: url('login.jpeg'); 
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 100vh;
+    }
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-box {
+      background: rgba(171, 216, 239, 0.95);
+      padding: 40px;
+      border-radius: 10px;
+      width: 360px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #003366;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #003366;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005599;
+    }
+    .google-login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    .google-login img {
+      height: 24px;
+      margin-right: 8px;
+    }
+    .google-login a {
+      text-decoration: none;
+      color: #333;
+    }
+    .forgot-password {
+      margin-top: 15px;
+      text-align: center;
+    }
+    .forgot-password a {
+      color: #005599;
+      text-decoration: none;
+    }
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>EIL Login Portal</h2>
+      <form id="loginForm" onsubmit="return validateForm()">
+        <label for="loginType">Login Type</label>
+        <select id="loginType" name="loginType" required>
+          <option value="">Select</option>
+          <option value="management">Management</option>
+          <option value="employee">Employee</option>
+          <option value="trainee">Trainee</option>
+        </select>
+
+        <label for="userId">User ID / Email</label>
+        <input type="text" id="userId" name="userId" placeholder="Enter User ID or Email" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+
+        <!-- ✅ Google reCAPTCHA widget -->
+        <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div> <!-- using test key -->
+
+        <button type="submit">Login</button>
+
+        <div class="google-login">
+          <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google Icon" />
+          <a href="#">Continue with Gmail</a>
+        </div>
+
+        <div class="forgot-password">
+          <a href="#" onclick="forgotPassword()">Forgot Password?</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function validateForm() {
+      const userId = document.getElementById("userId").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const loginType = document.getElementById("loginType").value;
+      const recaptcha = grecaptcha.getResponse();
+
+      if (!userId || !password || !loginType) {
+        alert("Please fill out all fields.");
+        return false;
+      }
+
+      // ✅ Check if input is email or user ID
+      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/i;
+      if (emailPattern.test(userId)) {
+        console.log("Logging in with Email:", userId);
+      } else {
+        console.log("Logging in with User ID:", userId);
+      }
+
+      if (recaptcha.length === 0) {
+        alert("Please complete the CAPTCHA.");
+        return false;
+      }
+
+      // Redirect to the correct page
+      if (loginType === "employee") {
+        window.location.href = "./employee.html";
+      } else if (loginType === "trainee") {
+        window.location.href = "./trainee.html";
+      } else if (loginType === "management") {
+        window.location.href = "./management.html";
+      } else {
+        alert("Invalid login type selected.");
+      }
+
+      return false; // Prevent actual form submission
+    }
+
+    function forgotPassword() {
+      const email = prompt("Enter your company email (e.g. name@eil.com):");
+      if (email && email.endsWith("@eil.com")) {
+        alert("A password reset link has been sent to your email.");
+      } else {
+        alert("Please enter a valid company email (must end with @eil.com).");
+      }
+    }
+  </script>
+</body>
+</html>
